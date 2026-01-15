@@ -1,6 +1,6 @@
 #import "SettingsViewController.h"
-#import "../Views/SCISwitchTableCell.h"
-#import "../Views/SCIStepperTableCell.h" // <--- Make sure this line exists
+#import "../Components/Prefs/SwitchTableCell.h"
+#import "../Components/Prefs/StepperTableCell.h" // <--- Make sure this line exists
 
 @interface SCISettingsViewController ()
 @property (nonatomic, assign) BOOL hasDynamicSpecifiers;
