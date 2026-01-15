@@ -1,4 +1,6 @@
 #import "SettingsViewController.h"
+#import "../Views/SCISwitchTableCell.h"
+#import "../Views/SCIStepperTableCell.h" // <--- Make sure this line exists
 
 @interface SCISettingsViewController ()
 @property (nonatomic, assign) BOOL hasDynamicSpecifiers;
@@ -28,8 +30,8 @@
     return section;
 }
 
-// Pref Switch Cell
-- (PSSpecifier *)newSwitchCellWithTitle:(NSString *)titleText detailTitle:(NSString *)detailText key:(NSString *)keyText changeAction:(SEL)changeAction {
+// Pref Switch Cell - FIXED VERSION
+- (PSSpecifier *)newSwitchCellWithTitle:(NSString *)titleText detailTitle:(NSString *)detailText key:(NSString *)keyText defaultValue:(BOOL)defValue changeAction:(SEL)changeAction {
     PSSpecifier *switchCell = [PSSpecifier preferenceSpecifierNamed:titleText target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:nil cell:PSSwitchCell edit:nil];
     
     [switchCell setProperty:keyText forKey:@"key"];
@@ -37,12 +39,22 @@
     [switchCell setProperty:@YES forKey:@"big"];
     [switchCell setProperty:SCISwitchTableCell.class forKey:@"cellClass"];
     [switchCell setProperty:NSBundle.mainBundle.bundleIdentifier forKey:@"defaults"];
-    //[switchCell setProperty:@([SCIManager getBoolPref:keyText]) forKey:@"default"];
+    [switchCell setProperty:@(defValue) forKey:@"default"]; // This was missing
     [switchCell setProperty:NSStringFromSelector(changeAction) forKey:@"switchAction"];
+    
     if (detailText != nil) {
         [switchCell setProperty:detailText forKey:@"subtitle"];
     }
     return switchCell;
+}
+
+- (PSSpecifier *)newButtonCellWithTitle:(NSString *)titleText detailTitle:(NSString *)detailText dynamicRule:(NSString *)rule action:(SEL)action {
+    PSSpecifier *buttonCell = [PSSpecifier preferenceSpecifierNamed:titleText target:self set:nil get:nil detail:nil cell:PSButtonCell edit:nil];
+    [buttonCell setButtonAction:action];
+    [buttonCell setProperty:titleText forKey:@"label"];
+    if (detailText != nil) [buttonCell setProperty:detailText forKey:@"subtitle"];
+    if (rule != nil) [buttonCell setProperty:rule forKey:@"dynamicRule"];
+    return buttonCell;
 }
 
 // Pref Stepper Cell
@@ -114,7 +126,6 @@
             // Section 3: Save media
             [self newSectionWithTitle:@"Save media" footer:nil],
             [self newSwitchCellWithTitle:@"Download feed posts" detailTitle:@"Long-press with finger(s) to download posts in the home tab" key:@"dw_feed_posts" changeAction:nil],
-            [self newSwitchCellWithTitle:@"Download reels" detailTitle:@"Long-press with finger(s) on a reel to download" key:@"dw_reels" changeAction:nil],
             [self newSwitchCellWithTitle:@"Download stories" detailTitle:@"Long-press with finger(s) while viewing someone's story to download" key:@"dw_story" changeAction:nil],
             [self newSwitchCellWithTitle:@"Save profile picture" detailTitle:@"On someone's profile, click their profile picture to enlarge it, then hold to download" key:@"save_profile" changeAction:nil],
             [self newStepperCellWithTitle:@"Use %@ %@ for long-press" key:@"dw_finger_count" min:1 max:5 step:1 label:@"fingers" singularLabel:@"finger"],
@@ -153,8 +164,7 @@
             [self newSectionWithTitle:@"Navigation" footer:nil],
             [self newSwitchCellWithTitle:@"Hide explore tab" detailTitle:@"Hides the explore/search tab on the bottom navbar" key:@"hide_explore_tab" changeAction:nil],
             [self newSwitchCellWithTitle:@"Hide create tab" detailTitle:@"Hides the create/camera tab on the bottom navbar" key:@"hide_create_tab" changeAction:nil],
-            [self newSwitchCellWithTitle:@"Hide reels tab" detailTitle:@"Hides the reels tab on the bottom navbar" key:@"hide_reels_tab" changeAction:nil],
-
+            
             // Section 8: Security
             [self newSectionWithTitle:@"Security" footer:nil],
             [self newSwitchCellWithTitle:@"Padlock" detailTitle:@"Locks Instagram with biometrics/password" key:@"padlock" changeAction:nil],
