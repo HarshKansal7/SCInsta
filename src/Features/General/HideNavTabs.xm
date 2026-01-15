@@ -32,8 +32,8 @@
         }
 
         // Reels tab
-        else if ([SCIManager getBoolPref:@"hide_reels_tab"] && [obj.accessibilityIdentifier isEqualToString:@"reels-tab"]) {
-            NSLog(@"[SCInsta] Hiding reels tab");
+        else if ([obj.accessibilityIdentifier isEqualToString:@"reels-tab"]) {
+            NSLog(@"[SCInsta] PERMANENTLY Hiding reels tab");
 
             shouldHide = YES;
 

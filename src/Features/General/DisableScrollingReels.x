@@ -5,20 +5,14 @@
 - (void)didMoveToWindow {
     %orig;
 
-    if ([SCIManager getBoolPref:@"disable_scrolling_reels"]) {
-        NSLog(@"[SCInsta] Disabling scrolling reels");
-        
-        self.scrollEnabled = false;
-    }
+    // Hard-coded to always disable scrolling
+    NSLog(@"[SCInsta] PERMANENTLY Disabling scrolling reels");
+    self.scrollEnabled = false;
 }
 
 - (void)setScrollEnabled:(BOOL)arg1 {
-    if ([SCIManager getBoolPref:@"disable_scrolling_reels"]) {
-        NSLog(@"[SCInsta] Disabling scrolling reels");
-        
-        return %orig(NO);
-    }
-
-    return %orig;
+    // Force the scroll enabled state to always be NO
+    NSLog(@"[SCInsta] PERMANENTLY Overriding scroll state to NO");
+    return %orig(NO);
 }
 %end
