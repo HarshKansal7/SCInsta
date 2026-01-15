@@ -31,15 +31,15 @@
 }
 
 // Pref Switch Cell - FIXED VERSION
-- (PSSpecifier *)newSwitchCellWithTitle:(NSString *)titleText detailTitle:(NSString *)detailText key:(NSString *)keyText defaultValue:(BOOL)defValue changeAction:(SEL)changeAction {
+// Pref Switch Cell - MATCHING HEADER LINE 30
+- (PSSpecifier *)newSwitchCellWithTitle:(NSString *)titleText detailTitle:(NSString *)detailText key:(NSString *)keyText changeAction:(SEL)changeAction {
     PSSpecifier *switchCell = [PSSpecifier preferenceSpecifierNamed:titleText target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:nil cell:PSSwitchCell edit:nil];
     
     [switchCell setProperty:keyText forKey:@"key"];
     [switchCell setProperty:keyText forKey:@"id"];
     [switchCell setProperty:@YES forKey:@"big"];
-    [switchCell setProperty:SCISwitchTableCell.class forKey:@"cellClass"];
+    [switchCell setProperty:objc_getClass("SCISwitchTableCell") ?: NSClassFromString(@"SCISwitchTableCell") forKey:@"cellClass"];
     [switchCell setProperty:NSBundle.mainBundle.bundleIdentifier forKey:@"defaults"];
-    [switchCell setProperty:@(defValue) forKey:@"default"]; // This was missing
     [switchCell setProperty:NSStringFromSelector(changeAction) forKey:@"switchAction"];
     
     if (detailText != nil) {
